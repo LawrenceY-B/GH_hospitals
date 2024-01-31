@@ -5,86 +5,24 @@ import { DB_Connection } from "./database/db";
 import cors from "cors";
 import fs from "fs";
 import hospital from "./schema/hospital.model";
+import ErrorHandler from "./middlewares/errorhandler";
+import hospitalRoutes from "./routes/hospital.routes";
 
 const app = express();
 dotenv.config();
 const server = createServer(app);
 const port = process.env.PORT || 8080;
 
-app.use(express.json());
-app.use(cors());
+app.use(express.json())
+.use(cors())
+.use(express.urlencoded({ extended: true }))
+app.use("/api/hospital", hospitalRoutes);
 
-app.get("/", async (req: Request, res: Response) => {
-  try {
-    const { name } = req.body;
-    const text = new RegExp(name as string, "i");
-    const HospitalData = await hospital.find({ FacilityName: text });
-    if (!HospitalData) {
-      res.status(404).json({ success: false, message: "No hospital found" });
-    }
-    res.status(200).json({ success: true, data: HospitalData });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
+app.all("*", (req: Request, res: Response) => {
+  res.status(404).json({ message: "Page Not Found 😔" });
+  console.warn(`${req.method} - ${req.url} - ${req.ip} Page Not Found 🔦🔦`);
 });
-app.get("/get-types", async (req: Request, res: Response) => {
-  try {
-    const types = await hospital.distinct("Type");
-    if (!types) {
-      res.status(404).json({ success: false, message: "No hospital found" });
-    }
-    res.status(200).json({ success: true, data: types });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
-app.get("/get-regions", async (req: Request, res: Response) => {
-  try {
-    const regions = await hospital.distinct("Region");
-    if (!regions) {
-      res.status(404).json({ success: false, message: "No hospital found" });
-    }
-    res.status(200).json({ success: true, data: regions });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
-app.get("/get-districts", async (req: Request, res: Response) => {
-  try {
-    const districts = await hospital.distinct("District");
-    if (!districts) {
-      res.status(404).json({ success: false, message: "No hospital found" });
-    }
-    res.status(200).json({ success: true, data: districts });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
-app.get("/find/town", async (req: Request, res: Response) => {
-  try {
-const{name}=req.body
-const text = new RegExp(name as string, "i");
-const HospitalData = await hospital.find({ Town: text });
-    if (!HospitalData) {
-      res.status(404).json({ success: false, message: "No Town found" });
-    }
-    res.status(200).json({ success: true, data: HospitalData });
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
-app.get("/get-ownerships", async (req: Request, res: Response) => {
-  try {
-    const ownerships = await hospital.distinct("Ownership");
-    if (!ownerships) {
-      res.status(404).json({ success: false, message: "No hospital found" });
-    }
-    res.status(200).json({ success: true, data: ownerships });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
+app.use(ErrorHandler);
 
 server.listen(port, async () => {
   await DB_Connection();
