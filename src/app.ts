@@ -7,15 +7,17 @@ import fs from "fs";
 import hospital from "./schema/hospital.model";
 import ErrorHandler from "./middlewares/errorhandler";
 import hospitalRoutes from "./routes/hospital.routes";
+import { ImgScrapper } from "./utils/scrapper";
 
 const app = express();
 dotenv.config();
 const server = createServer(app);
 const port = process.env.PORT || 8080;
 
-app.use(express.json())
-.use(cors())
-.use(express.urlencoded({ extended: true }))
+app
+  .use(express.json())
+  .use(cors())
+  .use(express.urlencoded({ extended: true }));
 app.use("/api/hospital", hospitalRoutes);
 
 app.all("*", (req: Request, res: Response) => {
@@ -23,7 +25,10 @@ app.all("*", (req: Request, res: Response) => {
   console.warn(`${req.method} - ${req.url} - ${req.ip} Page Not Found 🔦🔦`);
 });
 app.use(ErrorHandler);
+//Thinking of scrappin all hospitaols to get their respective images and save them to the database
 
+// const scrapper = new ImgScrapper();
+// scrapper.initiate();
 server.listen(port, async () => {
   await DB_Connection();
   console.log(`Server is running on port ${port}`);

@@ -9,9 +9,11 @@ export const searchHospital = async (
   next: NextFunction
 ) => {
   try {
-    const {error} = validateQuery(req.body);
+    const { error } = validateQuery(req.body);
     if (error) {
-      res.status(400).json({ success: false, message: error.details[0].message });
+      res
+        .status(400)
+        .json({ success: false, message: error.details[0].message });
     }
     const { name } = req.body;
     const text = new RegExp(name as string, "i");
@@ -30,9 +32,11 @@ export const findTown = async (
   next: NextFunction
 ) => {
   try {
-    const {error} = validateQuery(req.body);
+    const { error } = validateQuery(req.body);
     if (error) {
-      res.status(400).json({ success: false, message: error.details[0].message });
+      res
+        .status(400)
+        .json({ success: false, message: error.details[0].message });
     }
     const { name } = req.body;
     const text = new RegExp(name as string, "i");
@@ -122,5 +126,17 @@ export const getAllHospitals = async (
     res.status(200).json({ success: true, data: hospitals });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getImg = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+   
+  } catch (err) {
+    next(err);
   }
 };

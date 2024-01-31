@@ -9,6 +9,7 @@ export interface IHospital {
   Ownership: string;
   Latitude: string;
   Longitude: string;
+  ImgUrl: string;
 }
 const hospitalSchema = new Schema<IHospital>({
   Region: { type: String },
@@ -19,6 +20,7 @@ const hospitalSchema = new Schema<IHospital>({
   Ownership: { type: String },
   Latitude: { type: String },
   Longitude: { type: String },
+  ImgUrl: { type: String },
 });
 const hospital = model<IHospital>("Hospital", hospitalSchema);
 export default hospital;
