@@ -40,7 +40,7 @@ export const findTown = async (
     }
     const { name } = req.body;
     const text = new RegExp(name as string, "i");
-    const HospitalData = await hospital.find({ Town: text });
+    const HospitalData = await hospital.find({ Town: text }).distinct("Town");
     if (!HospitalData || HospitalData.length === 0) {
       res.status(404).json({ success: false, message: "No Town found" });
     }
