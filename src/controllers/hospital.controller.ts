@@ -109,7 +109,6 @@ export const getOwnerships = async (
     next(error);
   }
 };
-
 export const getAllHospitals = async (
   req: Request,
   res: Response,
@@ -129,14 +128,19 @@ export const getAllHospitals = async (
   }
 };
 
-export const getImg = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+
+export const filter = async(req: Request, res: Response, next: NextFunction) => {
   try {
-   
-  } catch (err) {
-    next(err);
+    const {ownership,type,town} =req.query
+    console.log("Owner: " + ownership + " Type: " + type + " Town: " + town)
+    const text = new RegExp(town as string, "i");
+
+    const HospitalData = await hospital.find({$and:[{Ownership:ownership},{Type:type},{Town:text}]})
+    if (!HospitalData || HospitalData.length === 0) {
+      res.status(404).json({ success: true, message: "No hospital found" });
+    }
+    res.status(200).json({ success: true, data: HospitalData });
+  } catch (error) {
+    next(error);
   }
-};
+}
