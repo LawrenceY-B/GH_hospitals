@@ -19,9 +19,9 @@ export const searchHospital = async (
     const text = new RegExp(name as string, "i");
     const HospitalData = await hospital.find({ FacilityName: text });
     if (!HospitalData || HospitalData.length === 0) {
-      res.status(404).json({ success: true, message: "No hospital found" });
+      res.status(200).json({ success: true,data: [], message: "No hospital found" });
     }
-    res.status(200).json({ success: true, data: HospitalData });
+    res.status(200).json({ success: true, data: HospitalData , message:`${HospitalData.length} hospital(s) found`});
   } catch (error) {
     next(error);
   }
