@@ -19,9 +19,17 @@ export const searchHospital = async (
     const text = new RegExp(name as string, "i");
     const HospitalData = await hospital.find({ FacilityName: text });
     if (!HospitalData || HospitalData.length === 0) {
-      res.status(200).json({ success: true,data: [], message: "No hospital found" });
+      res
+        .status(200)
+        .json({ success: true, data: [], message: "No hospital found" });
     }
-    res.status(200).json({ success: true, data: HospitalData , message:`${HospitalData.length} hospital(s) found`});
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: HospitalData,
+        message: `${HospitalData.length} hospital(s) found`,
+      });
   } catch (error) {
     next(error);
   }
@@ -128,19 +136,33 @@ export const getAllHospitals = async (
   }
 };
 
-
-export const filter = async(req: Request, res: Response, next: NextFunction) => {
+export const filter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const {ownership,type,town} =req.query
-    console.log("Owner: " + ownership + " Type: " + type + " Town: " + town)
+    const { ownership, type, town } = req.query;
+    console.log("Owner: " + ownership + " Type: " + type + " Town: " + town);
     const text = new RegExp(town as string, "i");
 
-    const HospitalData = await hospital.find({$and:[{Ownership:ownership},{Type:type},{Town:text}]})
+    const HospitalData = await hospital.find({
+      $and: [{ Ownership: ownership }, { Type: type }, { Town: text }],
+    });
     if (!HospitalData || HospitalData.length === 0) {
-      res.status(404).json({ success: true, message: "No hospital found" });
+      res
+        .status(404)
+        .json({ success: true, data: [], message: "No hospital found" });
     }
-    res.status(200).json({ success: true, data: HospitalData });
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `${HospitalData.length} hospital(s) found`,
+        data: HospitalData,
+      });
   } catch (error) {
     next(error);
   }
-}
+};
