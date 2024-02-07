@@ -130,7 +130,7 @@ export const getAllHospitals = async (
     if (!hospitals) {
       res.status(404).json({ success: false, message: "No hospital found" });
     }
-    res.status(200).json({ success: true, data: hospitals });
+    res.status(200).json({ success: true, data: hospitals, message:`${hospitals.length} hospital(s) found` });
   } catch (error) {
     next(error);
   }
